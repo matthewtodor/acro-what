@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
 type RootStackParamList = {
 	Home: { name: string };
 	Login: { name: string };
+	Register: { name: string };
 	Profile: { name: string };
 };
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
@@ -38,8 +39,9 @@ const Home = ({ navigation }: Props): JSX.Element => {
 		<ScrollView contentContainerStyle={styles.container}>
 			<View style={styles.innerbox}>
 				<Text style={styles.text}>acro what?</Text>
-				<Button color="#597081" title="Go to Matt's profile" onPress={() => navigation.navigate("Profile", { name: "Matt" })} />
+				<Button color="#597081" title="Go to profile page" onPress={() => navigation.navigate("Profile", { name: "Profile" })} />
 				<Button color="#597081" title="Login" onPress={() => navigation.navigate("Login", { name: "Login" })} />
+				<Button color="#597081" title="Register" onPress={() => navigation.navigate("Register", { name: "Register" })} />
 			</View>
 		</ScrollView>
 	);

@@ -24,20 +24,42 @@ const styles = StyleSheet.create({
 type RootStackParamList = {
 	Home: { name: string };
 	Login: { name: string };
+	Register: { name: string };
 	Profile: { name: string };
 };
-type Props = NativeStackScreenProps<RootStackParamList, "Login">;
-const Login = ({ navigation }: Props): JSX.Element => {
+type Props = NativeStackScreenProps<RootStackParamList, "Register">;
+const Register = ({ navigation }: Props): JSX.Element => {
 	const {
 		control,
 		handleSubmit,
 		formState: { errors, isValid },
-	} = useForm({ mode: "onBlur" });
-	const onSubmit = (data: any) => console.log(data);
+	} = useForm({
+		mode: "onBlur",
+		defaultValues: {
+			email: "",
+			username: "",
+			password: "",
+		},
+	});
+	interface FormData {
+		email: string;
+		username: string;
+		password: string;
+	}
+	const onSubmit = (data: FormData) => {
+		console.log(data);
+	};
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.text}>login</Text>
+			<Text style={styles.text}>register</Text>
+			<Controller
+				control={control}
+				name="username"
+				render={({ field: { onChange, value, onBlur } }) => (
+					<TextInput style={styles.textinput} placeholder="username" value={value} onBlur={onBlur} onChangeText={(value) => onChange(value)} />
+				)}
+			/>
 			<Controller
 				control={control}
 				name="email"
@@ -56,4 +78,4 @@ const Login = ({ navigation }: Props): JSX.Element => {
 		</View>
 	);
 };
-export default Login;
+export default Register;
