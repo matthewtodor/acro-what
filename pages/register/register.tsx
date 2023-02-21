@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
 	},
 	textinput: {
 		backgroundColor: "#fff",
+		marginBottom: 5,
 	},
 });
 
