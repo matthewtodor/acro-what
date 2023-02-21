@@ -1,4 +1,4 @@
-import { StyleSheet, Text, ScrollView, Button, View } from "react-native";
+import { StyleSheet, Text, ScrollView, Button } from "react-native";
 
 const styles = StyleSheet.create({
 	container: {
