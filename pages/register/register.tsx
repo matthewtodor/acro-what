@@ -53,7 +53,7 @@ const Register = ({ navigation }: Props): JSX.Element => {
 	const onSubmit: SubmitHandler<FormData> = async (data) => {
 		try {
 			const user = await createUserWithEmailAndPassword(auth, data.email, data.password);
-			console.log(user);
+			navigation.navigate("Home", { name: "Home" });
 		} catch (err) {
 			throw err;
 		}
