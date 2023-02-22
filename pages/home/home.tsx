@@ -1,5 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StyleSheet, Text, ScrollView, Button, View } from "react-native";
+import { auth } from "../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const styles = StyleSheet.create({
 	container: {
@@ -34,14 +36,35 @@ type RootStackParamList = {
 };
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
+onAuthStateChanged(auth, (user) => {
+	if (user) {
+		const uid = user.uid;
+		loggedIn = true;
+		console.log("user information:", JSON.stringify(user, null, 2));
+	} else {
+		loggedIn = false;
+	}
+});
+let loggedIn: boolean = false;
 const Home = ({ navigation }: Props): JSX.Element => {
+	// const signOut = ()
+
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
 			<View style={styles.innerbox}>
 				<Text style={styles.text}>acro what?</Text>
-				<Button color="#597081" title="Go to profile page" onPress={() => navigation.navigate("Profile", { name: "Profile" })} />
-				<Button color="#597081" title="Login" onPress={() => navigation.navigate("Login", { name: "Login" })} />
-				<Button color="#597081" title="Register" onPress={() => navigation.navigate("Register", { name: "Register" })} />
+
+				{loggedIn ? (
+					<View style={styles.innerbox}>
+						<Text style={styles.text}> you are logged in!</Text>
+						<Button color="#597081" title="Go to profile page" onPress={() => navigation.navigate("Profile", { name: "Profile" })} />
+					</View>
+				) : (
+					<View style={styles.innerbox}>
+						<Button color="#597081" title="Login" onPress={() => navigation.navigate("Login", { name: "Login" })} />
+						<Button color="#597081" title="Register" onPress={() => navigation.navigate("Register", { name: "Register" })} />
+					</View>
+				)}
 			</View>
 		</ScrollView>
 	);

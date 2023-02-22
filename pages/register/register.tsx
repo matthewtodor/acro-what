@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { auth } from "../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -18,6 +20,7 @@ const styles = StyleSheet.create({
 	},
 	textinput: {
 		backgroundColor: "#fff",
+		marginBottom: 5,
 	},
 });
 
@@ -29,6 +32,11 @@ type RootStackParamList = {
 };
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 const Register = ({ navigation }: Props): JSX.Element => {
+	interface FormData {
+		email: string;
+		username: string;
+		password: string;
+	}
 	const {
 		control,
 		handleSubmit,
@@ -41,38 +49,56 @@ const Register = ({ navigation }: Props): JSX.Element => {
 			password: "",
 		},
 	});
-	interface FormData {
-		email: string;
-		username: string;
-		password: string;
-	}
-	const onSubmit = (data: FormData) => {
-		console.log(data);
+
+	const onSubmit: SubmitHandler<FormData> = async (data) => {
+		try {
+			const user = await createUserWithEmailAndPassword(auth, data.email, data.password);
+			navigation.navigate("Home", { name: "Home" });
+		} catch (err) {
+			throw err;
+		}
 	};
+	const onChange = (arg: { nativeEvent: { text: any } }) => {
+		return {
+			value: arg.nativeEvent.text,
+		};
+	};
+	console.log("errors:", errors);
 
 	return (
 		<View style={styles.container}>
 			<Text style={styles.text}>register</Text>
+
 			<Controller
 				control={control}
-				name="username"
 				render={({ field: { onChange, value, onBlur } }) => (
 					<TextInput style={styles.textinput} placeholder="username" value={value} onBlur={onBlur} onChangeText={(value) => onChange(value)} />
 				)}
+				name="username"
+				rules={{ required: true }}
 			/>
 			<Controller
 				control={control}
-				name="email"
 				render={({ field: { onChange, value, onBlur } }) => (
 					<TextInput style={styles.textinput} placeholder="email" value={value} onBlur={onBlur} onChangeText={(value) => onChange(value)} />
 				)}
+				name="email"
+				rules={{ required: true }}
 			/>
 			<Controller
 				control={control}
-				name="password"
 				render={({ field: { onChange, value, onBlur } }) => (
-					<TextInput style={styles.textinput} placeholder="password" value={value} onBlur={onBlur} onChangeText={(value) => onChange(value)} />
+					<TextInput
+						style={styles.textinput}
+						placeholder="password"
+						value={value}
+						onBlur={onBlur}
+						onChangeText={(value) => onChange(value)}
+						textContentType="password"
+					/>
 				)}
+				name="password"
+				rules={{ required: true }}
 			/>
 			<Button color="#597081" title="Submit" onPress={handleSubmit(onSubmit)} />
 		</View>
